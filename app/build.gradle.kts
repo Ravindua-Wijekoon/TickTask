@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.ticktask"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.ticktask"
