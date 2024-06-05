@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".Login">
+    tools:context=".SignIn"
+    android:background="@color/black">
 
-
-     <ImageView
+    <ImageView
         android:id="@+id/imageView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,23 +20,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:orientation="vertical"
-        android:padding="36dp"
+        android:paddingStart="36dp"
+        android:paddingEnd="36dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.497">
+        app:layout_constraintTop_toBottomOf="@+id/imageView8"
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Welcome Back"
+            android:text="Sign Up"
             android:textColor="@color/white"
             android:textSize="35dp"
             android:textStyle="bold"
+            android:layout_marginTop="0dp"
             tools:layout_editor_absoluteX="36dp"
             tools:layout_editor_absoluteY="213dp" />
 
@@ -45,17 +49,40 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign in your account"
+            android:text="Create account and take control"
             android:textColor="@color/gray"
             android:textSize="15dp"
             tools:layout_editor_absoluteX="36dp"
             tools:layout_editor_absoluteY="272dp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
+            android:text="Name"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            app:layout_constraintStart_toStartOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittext_back"
+            android:ems="10"
+            android:hint="Max"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="Email"
             android:textColor="@color/white"
             android:textSize="15dp"
@@ -97,28 +124,19 @@
             android:padding="12dp"
             android:textSize="15dp" />
 
-        <TextView
-            android:id="@+id/btn_fgtpassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="Forget password?"
-            android:textColor="@color/white"
-            android:textSize="15dp" />
-
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/btn_back"
-            android:text="Login"
+            android:text="Register"
             android:textSize="20sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal">
 
             <TextView
@@ -127,21 +145,47 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:text="Don't have an account?"
+                android:text="Have an account?"
                 android:textColor="@color/gray"
                 android:textSize="15dp" />
 
             <TextView
-                android:id="@+id/btn_signup"
+                android:id="@+id/btn_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="  Sign Up"
+                android:text="  Login"
                 android:textColor="@color/primaryColor"
                 android:textSize="18dp" />
+
         </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="120dp"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="By Clicking Register, you agree our"
+                android:textColor="@color/white"
+                android:textSize="10dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Terms and Data Policy"
+            android:textColor="@color/primaryColor"
+            android:textSize="10dp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
