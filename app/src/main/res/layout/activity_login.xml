@@ -113,7 +113,8 @@
             android:layout_marginTop="30dp"
             android:background="@drawable/btn_back"
             android:text="Login"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textAllCaps="false"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -138,7 +139,8 @@
                 android:layout_weight="1"
                 android:text="  Sign Up"
                 android:textColor="@color/primaryColor"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:clickable="true"/>
         </LinearLayout>
 
     </LinearLayout>
