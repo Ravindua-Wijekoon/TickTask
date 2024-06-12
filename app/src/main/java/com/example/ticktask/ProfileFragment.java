@@ -2,23 +2,26 @@ package com.example.ticktask;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class ProfileFragment extends Fragment {
 
     TextView textView_name1, textView_email, textView_name2;
-    Button btn_logout;
+    Button btn_logout, btn_edit_profile;
 
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREF_NAME = "tickTask";
@@ -37,6 +40,7 @@ public class ProfileFragment extends Fragment {
         textView_name2 = view.findViewById(R.id.name2);
         textView_email = view.findViewById(R.id.email);
         btn_logout = view.findViewById(R.id.btn_logout);
+        btn_edit_profile = view.findViewById(R.id.btn_editProfile); // Assuming you have an edit profile button
 
         sharedPreferences = getActivity().getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
 
@@ -52,6 +56,35 @@ public class ProfileFragment extends Fragment {
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLogoutDialog();
+            }
+        });
+
+        btn_edit_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEditProfileDialog(name, email);
+            }
+        });
+
+        return view;
+    }
+
+    private void showLogoutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomDialogTheme);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_logout, null);
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+
+        // Get dialog components
+        Button button_yes = dialogView.findViewById(R.id.button_yes);
+        Button button_no = dialogView.findViewById(R.id.button_no);
+
+        button_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 // Clear only the login flag
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean(KEY_IS_LOGGED_IN, false); // Clear login flag
@@ -63,9 +96,69 @@ public class ProfileFragment extends Fragment {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear the back stack
                 startActivity(intent);
                 getActivity().finish(); // Finish the current activity to prevent going back
+                dialog.dismiss();
             }
         });
 
-        return view;
+        button_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
+
+        dialog.show();
+
+        // Set the dialog width
+        dialog.getWindow().setLayout(1000, ViewGroup.LayoutParams.WRAP_CONTENT); // Adjust width as needed
+    }
+
+    private void showEditProfileDialog(String currentName, String currentEmail) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomDialogTheme);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_edit, null);
+        builder.setView(dialogView);
+
+        AlertDialog dialog = builder.create();
+
+        EditText editTextName = dialogView.findViewById(R.id.name);
+        EditText editTextEmail = dialogView.findViewById(R.id.email);
+        Button buttonYes = dialogView.findViewById(R.id.button_yes);
+        Button buttonNo = dialogView.findViewById(R.id.button_no);
+
+        editTextName.setText(currentName);
+        editTextEmail.setText(currentEmail);
+
+        buttonYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newName = editTextName.getText().toString();
+                String newEmail = editTextEmail.getText().toString();
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(KEY_NAME, newName);
+                editor.putString(KEY_EMAIL, newEmail);
+                editor.apply();
+
+                textView_name1.setText(newName);
+                textView_name2.setText(newName);
+                textView_email.setText(newEmail);
+
+                dialog.dismiss();
+                Toast.makeText(getContext(), "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        buttonNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+        // Set the dialog width
+        dialog.getWindow().setLayout(1000, ViewGroup.LayoutParams.WRAP_CONTENT); // Adjust width as needed
     }
 }

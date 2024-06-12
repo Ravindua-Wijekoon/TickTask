@@ -7,7 +7,6 @@
     tools:context=".ProfileFragment"
     android:background="@color/black">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <ImageView
         android:id="@+id/logo"
