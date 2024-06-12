@@ -1,7 +1,6 @@
 package com.example.ticktask;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,71 +12,78 @@ import android.widget.Toast;
 
 public class SignUp extends AppCompatActivity {
 
-    Button  btn_signup;
+    Button btn_signup;
     TextView btn_login;
     EditText editText_name, editText_email, editText_password;
     SharedPreferences sharedPreferences;
 
-    //create sharedPreferences
+    // Shared Preferences keys
     private static final String SHARED_PREF_NAME = "tickTask";
     private static final String KEY_NAME = "name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
-
-
-
+    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-
-        // direct to login activity
+        // Direct to login activity
         btn_login = findViewById(R.id.btn_login);
-
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (getApplicationContext(), Login.class);
+                Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
             }
         });
-        //end of direct to login activity
 
-
-        //handle Registration
+        // Handle registration
         btn_signup = findViewById(R.id.btn_signup);
         editText_name = findViewById(R.id.name);
         editText_email = findViewById(R.id.email);
         editText_password = findViewById(R.id.password);
-        sharedPreferences = getSharedPreferences( SHARED_PREF_NAME, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
 
-        String name = sharedPreferences.getString(KEY_NAME,null);
-        if (name != null){
-            Intent intent = new Intent(getApplicationContext(), test.class);
+        // Check if user is already logged in
+        boolean isLoggedIn = sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false);
+        if (isLoggedIn) {
+            Intent intent = new Intent(getApplicationContext(), NavigationView.class);
             startActivity(intent);
+            finish(); // Finish the current activity to prevent going back to it
         }
 
         btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Get user input
+                String name = editText_name.getText().toString();
+                String email = editText_email.getText().toString();
+                String password = editText_password.getText().toString();
 
-                //put data on sharedPreferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(KEY_NAME, editText_name.getText().toString());
-                editor.putString(KEY_EMAIL, editText_email.getText().toString());
-                editor.putString(KEY_PASSWORD, editText_password.getText().toString());
-                editor.apply();
+                // Validate user input
+                if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
+                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(getApplicationContext(), "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Save data to SharedPreferences
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(KEY_NAME, name);
+                    editor.putString(KEY_EMAIL, email);
+                    editor.putString(KEY_PASSWORD, password);
+                    editor.putBoolean(KEY_IS_LOGGED_IN, true); // Set login flag
+                    editor.apply();
 
-                Intent intent = new Intent(getApplicationContext(), test.class);
-                startActivity(intent);
+                    // Start navigation activity
+                    Intent intent = new Intent(getApplicationContext(), NavigationView.class);
+                    startActivity(intent);
+                    finish(); // Finish the current activity
 
-                Toast.makeText(getApplicationContext(), "Account Created Successfully", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getApplicationContext(), "Account Created Successfully", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-
     }
 }
