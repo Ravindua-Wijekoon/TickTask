@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class Login extends AppCompatActivity {
@@ -14,6 +15,8 @@ public class Login extends AppCompatActivity {
     Button btn_login;
     EditText editText_email, editText_password;
     SharedPreferences sharedPreferences;
+
+    TextView btn_signup;
 
     // Shared Preferences keys
     private static final String SHARED_PREF_NAME = "tickTask";
@@ -29,8 +32,17 @@ public class Login extends AppCompatActivity {
         btn_login = findViewById(R.id.btn_login);
         editText_email = findViewById(R.id.email);
         editText_password = findViewById(R.id.password);
+        btn_signup = findViewById(R.id.btn_signup);
 
         sharedPreferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+
+        btn_signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SignUp.class);
+                startActivity(intent);
+            }
+        });
 
         // Check if user is already logged in
         boolean isLoggedIn = sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false);

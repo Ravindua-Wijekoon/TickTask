@@ -1,64 +1,192 @@
 package com.example.ticktask;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.fragment.app.Fragment;
+
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public HomeFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private LinearLayout tasksLayout;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        tasksLayout = rootView.findViewById(R.id.taskList);
+        Button addButton = rootView.findViewById(R.id.btn_add);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddTaskDialog();
+            }
+        });
+
+        sharedPreferences = getActivity().getSharedPreferences("tickTask", Context.MODE_PRIVATE);
+        loadTasksFromSharedPreferences();
+        return rootView;
+    }
+
+    private void openAddTaskDialog() {
+        Dialog dialog = createDialog(R.layout.dialog_add);
+        Button addButton = dialog.findViewById(R.id.button_add);
+        Button cancelButton = dialog.findViewById(R.id.button_cancel);
+        EditText taskEditText = dialog.findViewById(R.id.task);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String taskText = taskEditText.getText().toString().trim();
+                if (!taskText.isEmpty()) {
+                    addTask(taskText);
+                    saveTasksToSharedPreferences();
+                    dialog.dismiss();
+                    Toast.makeText(getContext(), "Task Added Successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Please enter a task", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void openDeleteDialog(View taskView) {
+        Dialog dialog = createDialog(R.layout.dialog_delete);
+        Button yesButton = dialog.findViewById(R.id.button_yes);
+        Button noButton = dialog.findViewById(R.id.button_no);
+
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tasksLayout.removeView(taskView);
+                saveTasksToSharedPreferences();
+                dialog.dismiss();
+                Toast.makeText(getContext(), "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void openEditDialog(View taskView, TextView taskTextView) {
+        Dialog dialog = createDialog(R.layout.dialog_edit_item);
+        Button updateButton = dialog.findViewById(R.id.button_yes);
+        Button cancelButton = dialog.findViewById(R.id.button_no);
+        EditText taskEditText = dialog.findViewById(R.id.task);
+
+        taskEditText.setText(taskTextView.getText().toString());
+
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String updatedTask = taskEditText.getText().toString().trim();
+                taskTextView.setText(updatedTask);
+                saveTasksToSharedPreferences();
+                dialog.dismiss();
+                Toast.makeText(getContext(), "Task Edited Successfully", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private Dialog createDialog(int layoutResId) {
+        Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(layoutResId);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.getWindow().setLayout(1000, ViewGroup.LayoutParams.WRAP_CONTENT);
+        return dialog;
+    }
+
+    private void addTask(String taskText) {
+        View taskView = LayoutInflater.from(getActivity()).inflate(R.layout.card, null);
+        TextView taskTextView = taskView.findViewById(R.id.textView21);
+        ImageView deleteImageView = taskView.findViewById(R.id.imageView3);
+        ImageView editImageView = taskView.findViewById(R.id.imageView2);
+
+        taskTextView.setText(taskText);
+        deleteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDeleteDialog(taskView);
+            }
+        });
+
+        editImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openEditDialog(taskView, taskTextView);
+            }
+        });
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 0, 0, 40);
+        taskView.setLayoutParams(layoutParams);
+
+        tasksLayout.addView(taskView);
+    }
+
+    private void saveTasksToSharedPreferences() {
+        StringBuilder tasksStringBuilder = new StringBuilder();
+        for (int i = 0; i < tasksLayout.getChildCount(); i++) {
+            TextView taskTextView = tasksLayout.getChildAt(i).findViewById(R.id.textView21);
+            String taskText = taskTextView.getText().toString();
+            tasksStringBuilder.append(taskText);
+            if (i < tasksLayout.getChildCount() - 1) {
+                tasksStringBuilder.append(",");
+            }
+        }
+        String tasksString = tasksStringBuilder.toString();
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("tasks", tasksString);
+        editor.apply();
+    }
+
+    private void loadTasksFromSharedPreferences() {
+        String tasksString = sharedPreferences.getString("tasks", "");
+        if (!tasksString.isEmpty()) {
+            String[] tasksArray = tasksString.split(",");
+            for (String task : tasksArray) {
+                addTask(task);
+            }
+        }
     }
 }

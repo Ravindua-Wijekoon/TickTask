@@ -110,7 +110,7 @@ public class ProfileFragment extends Fragment {
         dialog.show();
 
         // Set the dialog width
-        dialog.getWindow().setLayout(1000, ViewGroup.LayoutParams.WRAP_CONTENT); // Adjust width as needed
+        dialog.getWindow().setLayout(1000, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     private void showEditProfileDialog(String currentName, String currentEmail) {
