@@ -52,7 +52,7 @@ public class SignUp extends AppCompatActivity {
         if (isLoggedIn) {
             Intent intent = new Intent(getApplicationContext(), NavigationView.class);
             startActivity(intent);
-            finish(); // Finish the current activity to prevent going back to it
+            finish();
         }
 
         btn_signup.setOnClickListener(new View.OnClickListener() {
@@ -80,10 +80,10 @@ public class SignUp extends AppCompatActivity {
                     // Clear tasks data
                     clearTasksSharedPreferences();
 
-                    // Start navigation activity
-                    Intent intent = new Intent(getApplicationContext(), NavigationView.class);
+                    // Start Login activity
+                    Intent intent = new Intent(getApplicationContext(), Login.class);
                     startActivity(intent);
-                    finish(); // Finish the current activity
+                    finish();
 
                     Toast.makeText(getApplicationContext(), "Account Created Successfully", Toast.LENGTH_SHORT).show();
                 }
