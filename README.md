@@ -11,7 +11,10 @@ Tick Task is a simple and user-friendly ToDo app developed using Android Studio 
 
 ## Screenshots
 
-*Include screenshots of your app here. For example: login screen, to-do list, task editing, profile management, etc.*
+<img src="https://github.com/user-attachments/assets/1fec5209-c064-4356-b669-c25d5b58fde0" alt="Screenshot 1" width="200"/>
+<img src="https://github.com/user-attachments/assets/85dd20f6-c49d-4d7c-8dfd-38aea3823864" alt="Screenshot 2" width="200"/>
+<img src="https://github.com/user-attachments/assets/9421742e-7377-4d24-9b01-69241d2ca55a" alt="Screenshot 3" width="200"/>
+<img src="https://github.com/user-attachments/assets/52eea842-7048-4948-819c-245752e68539" alt="Screenshot 4" width="200"/>
 
 ## Technologies Used
 
